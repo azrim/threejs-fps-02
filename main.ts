@@ -1,9 +1,9 @@
-// threejs-fps-02 entry program: hand the built game to the grader.
+// The program half of the CINDERPOINT entry: it is what the grader runs to receive the game.
 //
-// The game is everything under game/ (static ES modules, three.js vendored) and the four
-// screenshots under screenshots/. This program copies both into /output and writes
-// /output/dossier.json with the kit's vendored dossier builder, which walks the game's
-// source and caps its text where the sealed gate caps it.
+// game/ is the playable half — plain ES modules with three.js vendored under game/vendor/three —
+// and screenshots/ holds the four captures. Both trees are copied into /output as they are, and
+// then /output/dossier.json is written through the kit's buildDossier, the exact library the
+// scorer uses, so the dossier the judge reads is the dossier this repository can reproduce.
 import { cpSync, existsSync, mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -19,9 +19,9 @@ if (existsSync(join(here, 'screenshots'))) {
   cpSync(join(here, 'screenshots'), join(out, 'screenshots'), { recursive: true });
 }
 
-// The scorer's own caps (reference/gate.json), restated so a refused entry is refused here:
-// at most 4 screenshots of 256 KiB each, at most 993 files and 48 MiB of game, and the
-// dossier's source text at 160 KiB.
+// The gate's numbers, restated from reference/gate.json so this program refuses locally what
+// the scorer refuses on arrival: four captures at 256 KiB each, 993 game files at 48 MiB in
+// all, and 160 KiB of source text in the dossier.
 writeFileSync(
   join(out, 'dossier.json'),
   buildDossier(out, {
